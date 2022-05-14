@@ -139,7 +139,8 @@ def process(output, label):
     morphology_close_color = utils.Utils.to_color(morphology_close)
 
 
-def new_run(train_dataset_path, val_dataset_path, model, batch_size, epoch, lr, decay_rate, save_prefix, flush_secs, num_classes, input_channels):
+def new_run(train_dataset_path, val_dataset_path, model, batch_size, epoch, lr, decay_rate, save_prefix, flush_secs,
+            num_classes, input_channels):
     save_name = "-".join([str(save_prefix), model, str(batch_size), str(epoch), str(lr), str(decay_rate)]).replace("/",
                                                                                                                    ".")
     train_dataset_path = os.path.join(config.DATA_DIR, 'obt', train_dataset_path)
@@ -174,5 +175,9 @@ def new_run(train_dataset_path, val_dataset_path, model, batch_size, epoch, lr, 
 
 
 if __name__ == '__main__':
-    # run("image", "image", "fcn_resnet50", 8, 10, 0.001, 0.001, "a", 2)
+    new_run(train_dataset_path="image", val_dataset_path='valImage',
+            model="resnet50", batch_size=32, epoch=100,
+            lr=0.001, decay_rate=0.001, save_prefix="a", flush_secs=10,
+            num_classes=5, input_channels=32)
+
     pass
