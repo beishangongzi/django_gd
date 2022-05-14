@@ -176,7 +176,7 @@ def new_run(train_dataset_path, val_dataset_path, model, batch_size, epoch, lr, 
 
 if __name__ == '__main__':
     new_run(train_dataset_path="image", val_dataset_path='valImage',
-            model="resnet50", batch_size=32, epoch=100,
+            model="fcn_resnet50", batch_size=32, epoch=100,
             lr=0.001, decay_rate=0.001, save_prefix="a", flush_secs=10,
             num_classes=5, input_channels=32)
 
