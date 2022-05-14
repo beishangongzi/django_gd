@@ -113,10 +113,15 @@ if __name__ == '__main__':
     print('IoU is : ', IoU)
     print('mIoU is : ', mIoU)
 
-    imgPredict = torch.tensor([[0, 1, 2], [2, 1, 1]]).long()  # 可直接换成预测图片
-    imgPredict = torch.stack([imgPredict, imgPredict, imgPredict])  # 可直接换成预测图片
-    imgLabel = torch.tensor([[0, 1, 255], [1, 1, 2]]).long()  # 可直接换成标注图片
-    imgLabel = torch.stack([imgLabel, imgLabel, imgLabel]) # 可直接换成标注图片
+    # imgPredict = torch.tensor([[0, 1, 2], [2, 1, 1], [2, 1, 2]]).long()  # 可直接换成预测图片
+    # imgPredict = torch.stack([imgPredict, imgPredict, imgPredict])  # 可直接换成预测图片
+    # imgPredict = torch.stack([imgPredict, imgPredict, imgPredict])  # 可直接换成预测图片
+    imgPredict = torch.zeros(([32, 128, 128])).int()
+    # imgLabel = torch.tensor([[0, 1, 255], [1, 1, 2], [2, 1, 2]]).long()  # 可直接换成标注图片
+    # imgLabel = torch.stack([imgLabel, imgLabel, imgLabel]) # 可直接换成标注图片
+    # imgLabel = torch.stack([imgLabel, imgLabel, imgLabel]) # 可直接换成标注图片
+    imgLabel = torch.zeros([32, 128, 128]).int()
+    print(imgLabel.size())
     ignore_labels = [255]
     metric = SegmentationMetric(3)  # 3表示有3个分类，有几个分类就填几, 0也是1个分类
     hist = metric.addBatch(imgPredict, imgLabel, ignore_labels)

@@ -84,7 +84,7 @@ def valiate(model, val_loader, number_classes):
     loss_all = 0
     PA = []
     MPA = []
-    HIST = torch.zeros([4, 4])
+    HIST = torch.zeros([number_classes, number_classes])
     MIOU = []
 
     for data in val_loader:
@@ -105,7 +105,7 @@ def valiate(model, val_loader, number_classes):
         outputs = torch.argmax(outputs, 1).long()
         label = torch.squeeze(label, 1).long()
 
-        ignore_labels = [number_classes - 1]
+        ignore_labels = []
         metric = SegmentationMetric(numClass=number_classes)  # 3表示有3个分类，有几个分类就填几, 0也是1个分类
         hist = metric.addBatch(outputs.cpu(), label.cpu(), ignore_labels)
         pa = metric.pixelAccuracy()
