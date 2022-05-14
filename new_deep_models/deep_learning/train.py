@@ -106,7 +106,7 @@ def valiate(model, val_loader):
 
         ignore_labels = [0]
         metric = SegmentationMetric(4)  # 3表示有3个分类，有几个分类就填几, 0也是1个分类
-        hist = metric.addBatch(outputs, label, ignore_labels)
+        hist = metric.addBatch(outputs.cpu(), label.cpu(), ignore_labels)
         pa = metric.pixelAccuracy()
         mpa = metric.meanPixelAccuracy()
         mIoU = metric.meanIntersectionOverUnion()
