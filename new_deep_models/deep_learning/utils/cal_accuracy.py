@@ -96,9 +96,9 @@ class SegmentationMetric(object):
 
 # 测试内容
 if __name__ == '__main__':
-    imgPredict = torch.tensor([[0, 1, 2], [2, 1, 1]]).long()  # 可直接换成预测图片
-    imgLabel = torch.tensor([[0, 1, 255], [1, 1, 2]]).long()  # 可直接换成标注图片
-    ignore_labels = [255]
+    imgPredict = torch.tensor([[2, 2, 3], [2, 2, 2]]).long()  # 可直接换成预测图片
+    imgLabel = torch.tensor([[0, 2, 3], [1, 1, 255]]).long()  # 可直接换成标注图片
+    ignore_labels = [3]
     metric = SegmentationMetric(3)  # 3表示有3个分类，有几个分类就填几, 0也是1个分类
     hist = metric.addBatch(imgPredict, imgLabel, ignore_labels)
     pa = metric.pixelAccuracy()

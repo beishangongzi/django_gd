@@ -22,6 +22,7 @@ for item in items:
     print(item)
     Y = np.load(os.path.join(data_dir, item), allow_pickle=True).item().get("segmentation_mask")
     X = np.load(os.path.join(data_dir, item), allow_pickle=True).item().get("image")
+    Y = Y - 1
     edge = [0, 128, 256, -256, -128, None]
     for i in [0, 1, 3, 4]:
         for j in [0, 1, 3, 4]:
