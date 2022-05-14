@@ -146,7 +146,7 @@ def new_run(train_dataset_path, val_dataset_path, model, batch_size, epoch, lr, 
     val_dataset_path = os.path.join(config.DATA_DIR, 'obt', val_dataset_path)
 
     models = {"fcn_resnet50": fcn_resnet50, "fcn_resnet101": fcn_resnet101, "fcn_resnet152": fcn_resnet152}
-    model = models[model]()
+    model = models[model]().to(get_device())
 
     train_dataset = ObtTrainDataset(train_dataset_path)
     val_dataset = ObtTrainDataset(val_dataset_path)
