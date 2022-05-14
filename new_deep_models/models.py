@@ -7,6 +7,8 @@ class Train(models.Model):
     model = models.CharField('model', max_length=100, help_text="model name")
     train_dataset_path = models.CharField('train_dataset_path', max_length=100, help_text="train data")
     val_dataset_path = models.CharField("val_dataset_path", max_length=100, help_text="validate data")
+    num_classes = models.IntegerField(default=5)
+    input_channels = models.IntegerField(default=32)
     batch_size = models.IntegerField("batch_size", default=32, help_text="batch size")
     epoch = models.IntegerField("epoch", default=100, help_text="epoch default 100")
     lr = models.FloatField("lr", default=0.001, help_text="learning rate")

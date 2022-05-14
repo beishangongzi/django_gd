@@ -128,7 +128,6 @@ def valiate(model, val_loader):
         "mIoU": mIoU_all,
         "hist": HIST,
 
-
     }
 
     return res
@@ -139,14 +138,14 @@ def process(output, label):
     morphology_close_color = utils.Utils.to_color(morphology_close)
 
 
-def new_run(train_dataset_path, val_dataset_path, model, batch_size, epoch, lr, decay_rate, save_prefix, flush_secs):
+def new_run(train_dataset_path, val_dataset_path, model, batch_size, epoch, lr, decay_rate, save_prefix, flush_secs, num_classes, input_channels):
     save_name = "-".join([str(save_prefix), model, str(batch_size), str(epoch), str(lr), str(decay_rate)]).replace("/",
                                                                                                                    ".")
     train_dataset_path = os.path.join(config.DATA_DIR, 'obt', train_dataset_path)
     val_dataset_path = os.path.join(config.DATA_DIR, 'obt', val_dataset_path)
 
     models = {"fcn_resnet50": fcn_resnet50, "fcn_resnet101": fcn_resnet101, "fcn_resnet152": fcn_resnet152}
-    model = models[model]().to(get_device())
+    model = models[model](num_classes=num_classes, input_channels=input_channels).to(get_device())
 
     train_dataset = ObtTrainDataset(train_dataset_path)
     val_dataset = ObtTrainDataset(val_dataset_path)
@@ -171,6 +170,7 @@ def new_run(train_dataset_path, val_dataset_path, model, batch_size, epoch, lr, 
         add_confusion_matrix(writer, hist, 4, class_names=['a', "b", 'c', 'd'], global_step=epoch)
 
     writer.close()
+
 
 if __name__ == '__main__':
     # run("image", "image", "fcn_resnet50", 8, 10, 0.001, 0.001, "a", 2)

@@ -9,7 +9,7 @@ from torchvision.models.segmentation.fcn import _fcn_resnet, FCN
 
 
 def fcn(
-        num_classes: int = 4,
+        num_classes: int = 5,
         input_channels: int = 32,
         backbone: Optional[str] = "resnet50",
         aux_loss: Optional[bool] = None,
@@ -31,7 +31,7 @@ def fcn(
 
 
 def fcn_resnet50(
-        num_classes: int = 4,
+        num_classes: int = 5,
         input_channels: int = 32,
         aux_loss: Optional[bool] = None,
         pretrained_backbone: bool = False,
