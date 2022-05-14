@@ -25,6 +25,7 @@ def train(model,
           train_dataset,
           val_dataset,
           batch_size,
+          number_classes,
           epoch,
           lr,
           decay_rate,
@@ -63,7 +64,7 @@ def train(model,
         model.eval()
         with torch.no_grad():
             dl = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
-        val_value = valiate(model, dl)
+        val_value = valiate(model, dl, number_classes=number_classes)
 
         val_value.update({"train_loss": running_loss, "epoch": i})
         yield val_value
@@ -77,7 +78,7 @@ def train(model,
     torch.save(model.state_dict(), os.path.join(os.path.dirname(__file__), f"models/{save_name}_last_.pth"))
 
 
-def valiate(model, val_loader):
+def valiate(model, val_loader, number_classes):
     device = get_device()
     criterion = nn.CrossEntropyLoss().to(device)
     loss_all = 0
@@ -104,8 +105,8 @@ def valiate(model, val_loader):
         outputs = torch.argmax(outputs, 1).long()
         label = torch.squeeze(label, 1).long()
 
-        ignore_labels = [0]
-        metric = SegmentationMetric(4)  # 3表示有3个分类，有几个分类就填几, 0也是1个分类
+        ignore_labels = [number_classes - 1]
+        metric = SegmentationMetric(numClass=number_classes)  # 3表示有3个分类，有几个分类就填几, 0也是1个分类
         hist = metric.addBatch(outputs.cpu(), label.cpu(), ignore_labels)
         pa = metric.pixelAccuracy()
         mpa = metric.meanPixelAccuracy()
@@ -149,7 +150,7 @@ def new_run(train_dataset_path, val_dataset_path, model, batch_size, epoch, lr, 
 
     train_dataset = ObtTrainDataset(train_dataset_path)
     val_dataset = ObtTrainDataset(val_dataset_path)
-    history = train(model, train_dataset, val_dataset, batch_size, epoch, lr, decay_rate, save_name)
+    history = train(model, train_dataset, val_dataset, batch_size, num_classes, epoch, lr, decay_rate, save_name)
 
     writer = SummaryWriter(os.path.join(config.LOG_DIR, save_name), comment=save_name, flush_secs=flush_secs,
                            filename_suffix="aa")
