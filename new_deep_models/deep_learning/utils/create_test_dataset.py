@@ -29,8 +29,8 @@ def move_files(src, dist):
 os.chdir(os.path.join(config.DATA_DIR, config.DATAS["obt"]))
 
 
-testImagePreds = "valImagePreds"
-testImageMasks = "valImageMasks"
+valImagePreds = "valImagePreds"
+valImageMasks = "valImageMasks"
 testImage = "valImage"
 testImageMorphology = "valImageMorphology"
 erode = os.path.join(testImageMorphology, "erode")
@@ -40,16 +40,16 @@ close = os.path.join(testImageMorphology, "close")
 image = "image"
 imageMask = "imageMasks"
 move_files(testImage, image)
-move_files(testImageMasks, imageMask)
+move_files(valImageMasks, imageMask)
 
 
 shutil.rmtree(testImage, ignore_errors=True)
-shutil.rmtree(testImageMasks, ignore_errors=True)
-shutil.rmtree(testImagePreds, ignore_errors=True)
+shutil.rmtree(valImageMasks, ignore_errors=True)
+shutil.rmtree(valImagePreds, ignore_errors=True)
 shutil.rmtree(testImageMorphology, ignore_errors=True)
 
 
-dirs = [testImagePreds, testImageMasks, testImage,
+dirs = [valImagePreds, valImageMasks, testImage,
         testImageMorphology, open_, erode, dilate, close]
 mkdir_list(dirs)
 
@@ -58,7 +58,7 @@ np.random.shuffle(ls)
 ls = ls[:int(len(ls) * 0.2)]
 for l in ls:
     shutil.move(os.path.join(image, l), testImage)
-    shutil.move(os.path.join(imageMask, l), testImageMasks)
+    shutil.move(os.path.join(imageMask, l), valImageMasks)
 
 
 

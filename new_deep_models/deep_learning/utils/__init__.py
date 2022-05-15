@@ -3,6 +3,7 @@
 import numpy as np
 from typing import List
 
+import torch
 from spectral import save_rgb
 
 from .Morphology import Morphology
@@ -58,6 +59,25 @@ class Utils:
         """
         save_rgb(name, array, bands)
 
+    @staticmethod
+    def to_colors(input_gt,
+                  color_codes: List[str] = None,
+                  num_classes=None):
+
+        if isinstance(input_gt, torch.Tensor):
+            input_gt = input_gt.cpu().numpy()
+        image = input_gt[0]
+        image = Utils.to_color(image, color_codes, num_classes)
+        images = [image]
+        batch = input_gt.shape[0]
+        if batch > 1:
+            for i in range(1, batch):
+                new_image = Utils.to_color(input_gt[i], color_codes, num_classes)
+                images.append(new_image)
+        return np.stack(images)
+
 
 if __name__ == '__main__':
-    pass
+    t = torch.zeros([4, 100, 100])
+    images = Utils.to_colors(t)
+    print(images.shape)
