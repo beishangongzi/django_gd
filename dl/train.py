@@ -52,7 +52,7 @@ def train(
         train_dataset="image",
         model_name="fcn_resnet50",
         num_classes=5,
-        epoch=100,
+        epoch=200,
         input_channels=32,
         batch_size=8,
         lr=0.001,
