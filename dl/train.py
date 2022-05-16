@@ -70,10 +70,32 @@ def train(
     for i in range(epoch):
         mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, i,
                                         lr_scheduler=lr_scheduler, print_freq=print_freq, scaler=None)
-        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes)
         print(mean_loss)
+        print("******************pred****************************")
+        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes)
         val_info = str(confmat)
         print(val_info)
+
+        print("******************open****************************")
+        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way="open")
+        val_info = str(confmat)
+        print(val_info)
+
+        print("******************close****************************")
+        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way="close")
+        val_info = str(confmat)
+        print(val_info)
+
+        print("******************erode****************************")
+        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way="erode")
+        val_info = str(confmat)
+        print(val_info)
+
+        print("******************dilate****************************")
+        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way="dilate")
+        val_info = str(confmat)
+        print(val_info)
+
     torch.save(config.LOG_DIR, f"save_weights/model_{saved_model_name}.pth")
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
