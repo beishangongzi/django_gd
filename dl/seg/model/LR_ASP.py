@@ -9,7 +9,7 @@ from torchvision.models.segmentation.lraspp import LRASPP, _lraspp_mobilenetv3
 
 def lraspp_mobilenet_v3_large(
         num_classes: int = 21,
-        in_channels=5,
+        in_channels=32,
         **kwargs: Any,
 ) -> LRASPP:
     """Constructs a Lite R-ASPP Network model with a MobileNetV3-Large backbone.
