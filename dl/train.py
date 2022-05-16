@@ -1,7 +1,9 @@
 # create by andy at 2022/5/16
 # reference:
+import datetime
 import logging
 import os
+import time
 
 import torch
 from torch.utils.data import DataLoader
@@ -55,11 +57,16 @@ def train():
         lr=lr, weight_decay=weight_decay
     )
     lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), 100, warmup=True)
+    start_time = time.time()
     for epoch in range(100):
         mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, epoch,
                                         lr_scheduler=lr_scheduler, print_freq=10, scaler=None)
         confmat = evaluate(model, val_loader, device=device, num_classes=num_classes)
         val_info = str(confmat)
         print(val_info)
+    torch.save(config.LOG_DIR, "save_weights/model_{}.pth")
+    total_time = time.time() - start_time
+    total_time_str = str(datetime.timedelta(seconds=int(total_time)))
+    print("training time {}".format(total_time_str))
 if __name__ == '__main__':
     train()
