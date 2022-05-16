@@ -31,7 +31,11 @@ def train():
     lr = 0.001
     weight_decay = 1e-4
     model_name = "fcn_resnet50"
-
+    saved_model_name = "-".join([model_name,
+                                 batch_size.__str__(),
+                                 lr.__str__(),
+                                 weight_decay.__str__(),
+                                 ])
     logging.info(f"using {device}")
     logging.info(f"batch_size {batch_size}")
 
@@ -66,7 +70,7 @@ def train():
         print(mean_loss)
         val_info = str(confmat)
         print(val_info)
-    torch.save(config.LOG_DIR, "save_weights/model_{}.pth")
+    torch.save(config.LOG_DIR, f"save_weights/model_{saved_model_name}.pth")
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print("training time {}".format(total_time_str))
