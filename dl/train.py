@@ -58,7 +58,7 @@ def train():
     for epoch in range(100):
         mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, epoch,
                                         lr_scheduler=lr_scheduler, print_freq=10, scaler=None)
-        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes-1)
+        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes)
         val_info = str(confmat)
         print(val_info)
 if __name__ == '__main__':
