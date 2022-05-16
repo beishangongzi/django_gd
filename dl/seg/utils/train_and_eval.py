@@ -9,7 +9,7 @@ def criterion(inputs, target):
     losses = {}
     for name, x in inputs.items():
         # 忽略target中值为255的像素，255的像素是目标边缘或者padding填充
-        losses[name] = nn.functional.cross_entropy(x, target, ignore_index=0)
+        losses[name] = nn.functional.cross_entropy(x, target, ignore_index=255)
 
     if len(losses) == 1:
         return losses['out']
