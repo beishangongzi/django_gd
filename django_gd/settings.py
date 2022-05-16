@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
 
     'new_deep_models',
+    'dl',
 
     'rest_framework',
     
