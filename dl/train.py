@@ -29,8 +29,18 @@ def my_eval(i, model, val_loader, device, num_classes, writer, morphology):
     confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way=morphology)
     acc_global, acc, iu = confmat.compute()
     writer.add_scalar("acc_global" + morphology, acc_global, i)
-    writer.add_scalar("acc" + morphology, acc, i)
-    writer.add_scalar("iu" + morphology, iu, i)
+    writer.add_scalars("acc" + morphology, {"a": acc[0],
+                                            "b": acc[1],
+                                            "c": acc[2],
+                                            "d": acc[3],
+                                            "e": acc[4],
+                                            }, i)
+    writer.add_scalars("iu" + morphology, {"a": iu[0],
+                                           "b": iu[1],
+                                           "c": iu[2],
+                                           "d": iu[3],
+                                           "e": iu[4],
+                                           }, i)
     writer.add_scalar("mean_iu" + morphology, iu.mean().item() * 100, i)
 
     val_info = str(confmat)
