@@ -62,6 +62,7 @@ def train():
         mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, epoch,
                                         lr_scheduler=lr_scheduler, print_freq=10, scaler=None)
         confmat = evaluate(model, val_loader, device=device, num_classes=num_classes)
+        print(mean_loss)
         val_info = str(confmat)
         print(val_info)
     torch.save(config.LOG_DIR, "save_weights/model_{}.pth")
