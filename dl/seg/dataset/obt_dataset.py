@@ -1,4 +1,5 @@
 # encoding: utf-8
+import logging
 import os
 from glob import glob
 
@@ -17,6 +18,8 @@ class ObtTrainDataset(Dataset):
         assert mode in ("train", "val", "test")
         self.image_path = os.path.join(config.DATA_DIR, config.DATAS[self.name], image_path)
         self.image_list = glob(os.path.join(self.image_path, "*.npy"))
+        if len(self.image_list) == 0:
+            logging.warning(f"the dataset's length is 0. the image path {image_path}")
         self.mode = mode
 
         if mode in ("train", "val"):
