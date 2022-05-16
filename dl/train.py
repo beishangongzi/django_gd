@@ -7,6 +7,7 @@ import time
 
 import torch
 from torch.utils.data import DataLoader
+from torch.utils.tensorboard import SummaryWriter
 
 from dl.seg import utils, config
 from dl.seg.model import DPModels
@@ -21,6 +22,19 @@ def create_model(input_channels, num_classes, name):
     model = getattr(DPModels, name)(input_channels=input_channels, num_classes=num_classes)
 
     return model
+
+
+def my_eval(i, model, val_loader, device, num_classes, writer, morphology):
+    print("******************open****************************")
+    confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way=morphology)
+    acc_global, acc, iu = confmat.compute()
+    writer.add_scalar("acc_global" + morphology, acc_global, i)
+    writer.add_scalar("acc" + morphology, acc, i)
+    writer.add_scalar("iu" + morphology, iu, i)
+    writer.add_scalar("mean_iu" + morphology, iu.mean().item() * 100, i)
+
+    val_info = str(confmat)
+    print(val_info)
 
 
 def train(
@@ -67,36 +81,21 @@ def train(
     )
     lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), epoch, warmup=True)
     start_time = time.time()
+    writer = SummaryWriter(os.path.join(config.LOG_DIR, saved_model_name), comment=saved_model_name, flush_secs=10)
     for i in range(epoch):
         mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, i,
                                         lr_scheduler=lr_scheduler, print_freq=print_freq, scaler=None)
         print(mean_loss)
-        print("******************pred****************************")
-        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes)
-        val_info = str(confmat)
-        print(val_info)
 
-        print("******************open****************************")
-        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way="open")
-        val_info = str(confmat)
-        print(val_info)
+        my_eval(i, model, val_loader, device, num_classes, writer, "")
+        my_eval(i, model, val_loader, device, num_classes, writer, "open")
+        my_eval(i, model, val_loader, device, num_classes, writer, "close")
+        my_eval(i, model, val_loader, device, num_classes, writer, "erode")
+        my_eval(i, model, val_loader, device, num_classes, writer, "dilate")
 
-        print("******************close****************************")
-        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way="close")
-        val_info = str(confmat)
-        print(val_info)
+    writer.close()
 
-        print("******************erode****************************")
-        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way="erode")
-        val_info = str(confmat)
-        print(val_info)
-
-        print("******************dilate****************************")
-        confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way="dilate")
-        val_info = str(confmat)
-        print(val_info)
-
-    torch.save(config.LOG_DIR, f"save_weights/model_{saved_model_name}.pth")
+    torch.save(config.LOG_DIR, f"model_{saved_model_name}.pth")
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print("training time {}".format(total_time_str))
