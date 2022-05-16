@@ -5,7 +5,7 @@ import shutil
 
 import numpy as np
 
-from new_deep_models.deep_learning import config
+from dl.seg import config
 
 
 def mkdir(path):
