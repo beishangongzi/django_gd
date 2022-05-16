@@ -25,11 +25,15 @@ def create_model(input_channels, num_classes, name):
 
 def train():
     device = utils.get_device()
+    val_dataset = "valImage"
+    train_dataset = "image"
     num_classes = 5
     input_channels = 32
     batch_size = 8
     lr = 0.001
     weight_decay = 1e-4
+    epoch = 100
+    print_freq = 10
     model_name = "fcn_resnet50"
     saved_model_name = "-".join([model_name,
                                  batch_size.__str__(),
@@ -40,8 +44,8 @@ def train():
     logging.info(f"batch_size {batch_size}")
 
     log_file = os.path.join(config.LOG_DIR, "result.log")
-    train_dataset = ObtTrainDataset("image", "train")
-    val_dataset = ObtTrainDataset("valImage", "val")
+    train_dataset = ObtTrainDataset(train_dataset, "train")
+    val_dataset = ObtTrainDataset(val_dataset, "val")
     train_loader = DataLoader(train_dataset,
                               batch_size=batch_size,
                               shuffle=True,
@@ -61,11 +65,11 @@ def train():
         params_to_optimize,
         lr=lr, weight_decay=weight_decay
     )
-    lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), 100, warmup=True)
+    lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), epoch, warmup=True)
     start_time = time.time()
-    for epoch in range(100):
-        mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, epoch,
-                                        lr_scheduler=lr_scheduler, print_freq=10, scaler=None)
+    for i in range(epoch):
+        mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, i,
+                                        lr_scheduler=lr_scheduler, print_freq=print_freq, scaler=None)
         confmat = evaluate(model, val_loader, device=device, num_classes=num_classes)
         print(mean_loss)
         val_info = str(confmat)
