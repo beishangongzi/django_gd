@@ -23,18 +23,18 @@ def create_model(input_channels, num_classes, name):
     return model
 
 
-def train():
+def train(
+        val_dataset="valImage",
+        train_dataset="image",
+        model_name="fcn_resnet50",
+        num_classes=5,
+        epoch=100,
+        input_channels=32,
+        batch_size=8,
+        lr=0.001,
+        weight_decay=1e-4,
+        print_freq=10):
     device = utils.get_device()
-    val_dataset = "valImage"
-    train_dataset = "image"
-    num_classes = 5
-    input_channels = 32
-    batch_size = 8
-    lr = 0.001
-    weight_decay = 1e-4
-    epoch = 100
-    print_freq = 10
-    model_name = "fcn_resnet50"
     saved_model_name = "-".join([model_name,
                                  batch_size.__str__(),
                                  lr.__str__(),
@@ -78,5 +78,7 @@ def train():
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print("training time {}".format(total_time_str))
+
+
 if __name__ == '__main__':
     train()
