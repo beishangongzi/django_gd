@@ -26,7 +26,6 @@ def evaluate(model, data_loader, device, num_classes):
             image, target = image.to(device), target.to(device)
             output = model(image)
             output = output['out']
-            print(np.unique(output.argmax(1).flatten().cpu().numpy()))
             confmat.update(target.flatten(), output.argmax(1).flatten())
 
         confmat.reduce_from_all_processes()
