@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from torch import nn
 import dl.seg.utils.distributed_utils as utils
+from dl.seg.utils import Morphology, get_device
 
 
 def criterion(inputs, target):
@@ -16,7 +17,7 @@ def criterion(inputs, target):
     return losses['out'] + 0.5 * losses['aux']
 
 
-def evaluate(model, data_loader, device, num_classes):
+def evaluate(model, data_loader, device, num_classes, morphology_way=None):
     model.eval()
     confmat = utils.ConfusionMatrix(num_classes)
     metric_logger = utils.MetricLogger(delimiter="  ")
@@ -25,8 +26,18 @@ def evaluate(model, data_loader, device, num_classes):
         for image, target in metric_logger.log_every(data_loader, 100, header):
             image, target = image.to(device), target.to(device)
             output = model(image)
-            output = output['out']
-            confmat.update(target.flatten(), output.argmax(1).flatten())
+            output = output['out'].argmax(1)
+            if morphology_way == "close":
+                output = Morphology.close(output, 2, 1).to(get_device())
+            elif morphology_way == "open":
+                output = Morphology.open(output, 2, 1).to(get_device())
+            elif morphology_way == "erode":
+                output = Morphology.erode(output, 2, 1).to(get_device())
+            elif morphology_way == "dilate":
+                output = Morphology.dilate(output, 2, 1).to(get_device())
+            else:
+                pass
+            confmat.update(target.flatten(), output.flatten())
 
         confmat.reduce_from_all_processes()
 
