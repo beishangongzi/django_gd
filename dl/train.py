@@ -9,7 +9,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from dl.seg import utils, config
-from dl.seg.model.FcnResnet50 import fcn_resnet50
+from dl.seg.model import DPModels
 from dl.seg.dataset.obt_dataset import ObtTrainDataset
 from dl.seg.utils.train_and_eval import create_lr_scheduler, train_one_epoch, evaluate
 
@@ -17,8 +17,8 @@ logging.basicConfig(format='%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)
                     level=logging.DEBUG)
 
 
-def create_model(input_channels, num_classes):
-    model = fcn_resnet50(input_channels=input_channels, num_classes=num_classes)
+def create_model(input_channels, num_classes, name):
+    model = getattr(DPModels, name)(input_channels=input_channels, num_classes=num_classes)
 
     return model
 
@@ -30,6 +30,7 @@ def train():
     batch_size = 8
     lr = 0.001
     weight_decay = 1e-4
+    model_name = "fcn_resnet50"
 
     logging.info(f"using {device}")
     logging.info(f"batch_size {batch_size}")
@@ -45,7 +46,7 @@ def train():
                             batch_size=batch_size,
                             shuffle=False)
 
-    model = create_model(input_channels=input_channels, num_classes=num_classes)
+    model = create_model(input_channels=input_channels, num_classes=num_classes, name=model_name)
     model.to(device)
     params_to_optimize = [
         {"params": [p for p in model.backbone.parameters() if p.requires_grad]},
