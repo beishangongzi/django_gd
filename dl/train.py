@@ -25,7 +25,7 @@ def create_model(input_channels, num_classes, name):
 
 
 def my_eval(i, model, val_loader, device, num_classes, writer, morphology):
-    print("******************open****************************")
+    logging.info("******************open****************************")
     confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way=morphology)
     acc_global, acc, iu = confmat.compute()
     writer.add_scalar("acc_global" + morphology, acc_global, i)
@@ -34,7 +34,7 @@ def my_eval(i, model, val_loader, device, num_classes, writer, morphology):
     writer.add_scalar("mean_iu" + morphology, iu.mean().item() * 100, i)
 
     val_info = str(confmat)
-    print(val_info)
+    logging.info(val_info)
 
 
 def train(
@@ -85,7 +85,7 @@ def train(
     for i in range(epoch):
         mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, i,
                                         lr_scheduler=lr_scheduler, print_freq=print_freq, scaler=None)
-        print(mean_loss)
+        logging.info(mean_loss)
 
         my_eval(i, model, val_loader, device, num_classes, writer, "")
         my_eval(i, model, val_loader, device, num_classes, writer, "open")
@@ -98,7 +98,7 @@ def train(
     torch.save(config.LOG_DIR, f"model_{saved_model_name}.pth")
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
-    print("training time {}".format(total_time_str))
+    logging.info("training time {}".format(total_time_str))
 
 
 if __name__ == '__main__':
