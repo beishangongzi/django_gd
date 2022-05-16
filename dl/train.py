@@ -34,7 +34,7 @@ def train():
 
     log_file = os.path.join(config.LOG_DIR, "result.log")
     train_dataset = ObtTrainDataset("image", "train")
-    val_dataset = ObtTrainDataset("image", "val")
+    val_dataset = ObtTrainDataset("valImage", "val")
     train_loader = DataLoader(train_dataset,
                               batch_size=batch_size,
                               shuffle=True,
