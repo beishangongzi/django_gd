@@ -1,6 +1,12 @@
-# create by andy at 2022/5/16
-# reference: 
+from django.urls import path
+from rest_framework.routers import SimpleRouter, DefaultRouter
 
+from . import views
 
-if __name__ == '__main__':
-    pass
+urlpatterns = [
+]
+
+router = DefaultRouter()
+router.register("train", viewset=views.TrainView, basename="backbone")
+
+urlpatterns += router.urls

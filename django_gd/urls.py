@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("new-deep-model/", include("new_deep_models.urls")),
+    path("dl/", include("dl.urls")),
 ]

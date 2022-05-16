@@ -1,6 +1,9 @@
 # create by andy at 2022/5/16
-# reference: 
+from rest_framework import serializers
+from . import models
 
 
-if __name__ == '__main__':
-    pass
+class TrainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Train
+        fields = "__all__"
