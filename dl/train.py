@@ -11,7 +11,7 @@ from dl.seg.model.FcnResnet50 import fcn_resnet50
 from dl.seg.dataset.obt_dataset import ObtTrainDataset
 from dl.seg.utils.train_and_eval import create_lr_scheduler, train_one_epoch, evaluate
 
-logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
+logging.basicConfig(format='%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s: %(message)s',
                     level=logging.DEBUG)
 
 
