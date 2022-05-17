@@ -14,4 +14,6 @@ class Train(models.Model):
     lr = models.FloatField(default=0.001)
     weight_decay = models.FloatField(default=1e-4)
     print_freq = models.IntegerField(default=10)
+    pre_train = models.CharField(default="", max_length=100)
+    start_epoch = models.IntegerField(default=0)
 

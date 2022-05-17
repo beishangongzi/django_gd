@@ -57,13 +57,16 @@ def train(
         batch_size=8,
         lr=0.001,
         weight_decay=1e-4,
-        print_freq=10):
+        print_freq=10,
+        pre_train='',
+        start_epoch=0):
     device = utils.get_device()
     saved_model_name = "-".join([model_name,
+                                 epoch.__str__(),
                                  batch_size.__str__(),
                                  lr.__str__(),
                                  weight_decay.__str__(),
-                                 ])
+                                 pre_train]).replace("/", "_")
     logging.info(f"using {device}")
     logging.info(f"batch_size {batch_size}")
 
@@ -78,8 +81,13 @@ def train(
                             batch_size=batch_size,
                             shuffle=False)
 
-    model = create_model(input_channels=input_channels, num_classes=num_classes, name=model_name)
-    model.to(device)
+    if pre_train != "":
+        pre_train = os.path.join(config.MODELS_DIR, pre_train)
+        model = torch.load(pre_train).to(device)
+    else:
+        model = create_model(input_channels=input_channels, num_classes=num_classes, name=model_name)
+        model.to(device)
+
     params_to_optimize = [
         {"params": [p for p in model.backbone.parameters() if p.requires_grad]},
         {"params": [p for p in model.classifier.parameters() if p.requires_grad]}
@@ -92,7 +100,7 @@ def train(
     lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), epoch, warmup=True)
     start_time = time.time()
     writer = SummaryWriter(os.path.join(config.LOG_DIR, saved_model_name), comment=saved_model_name, flush_secs=10)
-    for i in range(epoch):
+    for i in range(start_epoch, epoch):
         mean_loss, lr = train_one_epoch(model, optimizer, train_loader, device, i,
                                         lr_scheduler=lr_scheduler, print_freq=print_freq, scaler=None)
         logging.info(mean_loss)
@@ -105,7 +113,7 @@ def train(
 
     writer.close()
 
-    torch.save(config.LOG_DIR, f"model_{saved_model_name}.pth")
+    torch.save(config.MODELS_DIR, f"model_{saved_model_name}.pth")
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     logging.info("training time {}".format(total_time_str))
