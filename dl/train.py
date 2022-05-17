@@ -25,7 +25,7 @@ def create_model(input_channels, num_classes, name):
 
 
 def my_eval(i, model, val_loader, device, num_classes, writer, morphology):
-    logging.info("******************open****************************")
+    logging.info(f"******************{morphology}****************************")
     confmat = evaluate(model, val_loader, device=device, num_classes=num_classes, morphology_way=morphology)
     acc_global, acc, iu = confmat.compute()
     writer.add_scalar("acc_global" + morphology, acc_global, i)
@@ -59,7 +59,11 @@ def train(
         weight_decay=1e-4,
         print_freq=10,
         pre_train='',
-        start_epoch=0):
+        start_epoch=0,
+        is_close=False,
+        is_erode=False,
+        is_dilate=False,
+        is_open=False):
     device = utils.get_device()
     saved_model_name = "-".join([model_name,
                                  epoch.__str__(),
@@ -106,10 +110,14 @@ def train(
         logging.info(mean_loss)
 
         my_eval(i, model, val_loader, device, num_classes, writer, "")
-        my_eval(i, model, val_loader, device, num_classes, writer, "open")
-        my_eval(i, model, val_loader, device, num_classes, writer, "close")
-        my_eval(i, model, val_loader, device, num_classes, writer, "erode")
-        my_eval(i, model, val_loader, device, num_classes, writer, "dilate")
+        if is_open:
+            my_eval(i, model, val_loader, device, num_classes, writer, "open")
+        if is_close:
+            my_eval(i, model, val_loader, device, num_classes, writer, "close")
+        if is_erode:
+            my_eval(i, model, val_loader, device, num_classes, writer, "erode")
+        if is_dilate:
+            my_eval(i, model, val_loader, device, num_classes, writer, "dilate")
 
     writer.close()
 
