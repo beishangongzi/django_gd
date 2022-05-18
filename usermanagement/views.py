@@ -49,6 +49,10 @@ class LoginView(GenericViewSet):
 
 
 class LoginPhoneView(GenericViewSet):
+    """
+    create:
+        login by phone
+    """
     queryset = models.UserAdd.objects.all()
     serializer_class = serializers.LoginPhoneSerializer
 

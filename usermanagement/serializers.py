@@ -19,7 +19,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 class LoginPhoneSerializer(serializers.Serializer):
-    phone = serializers.CharField()
+    phone = serializers.CharField(help_text="user phone")
     pwd = serializers.CharField()
 
     class Meta:
