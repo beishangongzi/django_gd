@@ -21,5 +21,8 @@ class TrainSerializer(serializers.ModelSerializer):
         model = models.Train
         fields = "__all__"
 
+        class Meta:
+            ref_name = 'new_deep_models_trainserializer'
+
 if __name__ == '__main__':
     pass

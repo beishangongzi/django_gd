@@ -1,7 +1,11 @@
+import django.utils.timezone
+import os
+import uuid
+
+from django.contrib.auth.models import User
 from django.db import models
 
 
-# Create your models here.
 
 class Train(models.Model):
     val_dataset = models.CharField(max_length=100, blank=False)
@@ -21,3 +25,16 @@ class Train(models.Model):
     is_dilate = models.BooleanField(default=False)
     is_open = models.BooleanField(default=False)
 
+
+def user_directory_path(instance, filename):
+    ext = filename.split('.')[-1]
+    print(instance.user)
+    filename = '{}-{}.{}'.format(filename, uuid.uuid4().hex[:10], ext)
+    return os.path.join("files", filename)
+
+
+class Test(models.Model):
+    user =models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    saved_model = models.CharField(max_length=100)
+    image = models.FileField(upload_to=user_directory_path, null=False)
+    time = models.DateTimeField(default=django.utils.timezone.now)

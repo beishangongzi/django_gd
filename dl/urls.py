@@ -8,5 +8,6 @@ urlpatterns = [
 
 router = DefaultRouter()
 router.register("train", viewset=views.TrainView, basename="backbone")
+router.register("test", viewset=views.TestView, basename="test")
 
 urlpatterns += router.urls
