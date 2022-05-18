@@ -20,7 +20,7 @@ class LoginSerializer(serializers.Serializer):
 
 class LoginPhoneSerializer(serializers.Serializer):
     phone = serializers.CharField(help_text="user phone")
-    pwd = serializers.CharField()
+    pwd = serializers.CharField(help_text="user password")
 
     class Meta:
         ref_name = 'usermanagement_loginPhoneSerializer'

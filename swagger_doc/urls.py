@@ -6,5 +6,6 @@ from rest_framework.permissions import AllowAny
 
 urlpatterns = [
     path("docs", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger",),
+    path("redoc", schema_view.with_ui("redoc", cache_timeout=0), name="schema-swagger-redoc",),
     path("doc", include_docs_urls(title="api rest frame work", permission_classes=[AllowAny]))
 ]
